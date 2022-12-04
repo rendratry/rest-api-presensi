@@ -1,0 +1,21 @@
+### GET verifikasi email
+POST http://localhost:3000/api/newaccount
+X-API-Key: 12345678
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email" : "rendratry1@gmail.com",
+  "password" : "rendra"
+}
+
+### login
+POST http://localhost:3000/api/login
+X-API-Key: 12345678
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email" : "rendratry1@gmail.com",
+  "password" : "rendra"
+}
