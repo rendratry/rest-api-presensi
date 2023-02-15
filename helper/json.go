@@ -17,3 +17,11 @@ func WriteToResponseBody(writer http.ResponseWriter, response interface{}) {
 	err := encoder.Encode(response)
 	PanicIfError(err)
 }
+
+func WriteToResponseBodyWithJWT(writer http.ResponseWriter, response interface{}, jwt string) {
+	writer.Header().Add("Content-Type", "application/json")
+	writer.Header().Add("Authorization", jwt)
+	encoder := json.NewEncoder(writer)
+	err := encoder.Encode(response)
+	PanicIfError(err)
+}

@@ -36,6 +36,7 @@ func (service *UserServiceImpl) CreateAkun(ctx context.Context, request web.Crea
 
 	akun := domain.User{
 		Email:       request.Email,
+		Nama:        request.Nama,
 		NoHp:        request.NoHp,
 		Password:    pwhash,
 		StatusLogin: "0",
@@ -70,4 +71,64 @@ func (service *UserServiceImpl) Login(ctx context.Context, request web.LoginRequ
 	login.StatusLogin = "success"
 
 	return helper.ToLoginResponse(login)
+}
+
+func (service *UserServiceImpl) GetProfile(ctx context.Context, id_user int) web.GetProfileResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	profile, err := service.UserRepository.GetProfile(ctx, tx, id_user)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+
+	return helper.ToGetProfileResponse(profile)
+}
+
+func (service *UserServiceImpl) EmailCheck(ctx context.Context, email string) web.GetEmailCheckResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	emailCheck, err := service.UserRepository.EmailCheck(ctx, tx, email)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+
+	return helper.ToGetEmailResponse(emailCheck)
+}
+
+func (service *UserServiceImpl) UpdatePassword(ctx context.Context, request web.UpdatePasswordRequest) web.UpdatePasswordResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	newPassword, err := helper.HashPassword(request.NewPassword)
+	helper.PanicIfError(err)
+
+	updatePassword := domain.User{
+		IdUser:   request.IdUser,
+		Email:    request.Email,
+		Password: newPassword,
+	}
+
+	updatePassword = service.UserRepository.UpdatePassword(ctx, tx, updatePassword)
+
+	return helper.ToUpdatePasswordResponse(updatePassword)
+}
+
+func (service *UserServiceImpl) KaryawanCheck(ctx context.Context, karyawan string) web.GetKaryawanResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	karyawancheck, err := service.UserRepository.KaryawanCheck(ctx, tx, karyawan)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+
+	return helper.ToGetKaryawanResponse(karyawancheck)
 }

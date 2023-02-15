@@ -19,3 +19,26 @@ Content-Type: application/json
   "email" : "rendratry1@gmail.com",
   "password" : "rendra"
 }
+
+###otp Validation
+POST http://localhost:3000/api/otpvalidation
+X-API-Key: 12345678
+Accept: application/json
+Content-Type: application/json
+
+{
+"email" : "rendratry1@gmail.com",
+"otp" : "8018"
+}
+
+###otp Validation
+GET http://localhost:3000/api/profile/1
+X-API-Key: 12345678
+Accept: application/json
+Content-Type: application/json
+
+###Get Riwayat
+GET http://localhost:4000/api/riwayatpresensi/1
+X-API-Key: 12345678
+Accept: application/json
+Content-Type: application/json
